@@ -1,0 +1,31 @@
+#!/usr/bin/php
+
+<?php
+
+chdir(__DIR__);
+date_default_timezone_set('UTC');
+
+spl_autoload_register(function ($class)
+{
+    if (0 === strpos($class, 'App\\'))
+    {
+        include_once './' . strtr($class, '\\', '/') . '.php';
+        return true;
+    }
+
+    return false;
+
+}, true, true);
+
+if ($argc < 2)
+{
+    system('clear');
+
+    echo "\033[0;34m[ Available commands ]\n\n\033[0;32m";
+    include 'App/Model/Cli/cli-usage.php';
+    echo "\033[0m\n";
+
+    return;
+}
+
+return (new \App\Model\Cli)->dispatch($argv) ?: 0;
